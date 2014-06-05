@@ -75,7 +75,7 @@ for j in range(noOfStars):
     data = loadtxt(ifile,delimiter=',')
     starHere = starNames[j]
     print starHere
-    outfile = "/Users/dicy/Drive/GSUResearchandClasses/Research/KeplerWork/OutputFiles/ACF_%s.csv"%starHere
+    outfile = "removed for security/ACF_%s.csv"%starHere
     
     jd = data[:,0]
     flux = data[:,3]
