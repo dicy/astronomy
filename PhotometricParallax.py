@@ -14,19 +14,19 @@ so I'm open to suggestions.
 import numpy as np
 from pylab import figure, show
 
-ifile1 = '/Users/dicy/Drive/GSUResearchandClasses/Research/KeplerWork/OutputFiles/2MASSSColorsSlowRotators.txt'
-ifile2 = '/Users/dicy/Drive/GSUResearchandClasses/Research/KeplerWork/OutputFiles/2MASSSColorsFastRotators.txt'
+ifile1 = '/removed for security/2MASSSColorsSlowRotators.txt'
+ifile2 = '/removed for security/2MASSSColorsFastRotators.txt'
 
-ifile3 = '/Users/dicy/Drive/GSUResearchandClasses/Research/KeplerWork/OutputFiles/ProperMotionFastRotators.txt'
-ifile4 = '/Users/dicy/Drive/GSUResearchandClasses/Research/KeplerWork/OutputFiles/ProperMotionSlowRotators.txt'
+ifile3 = '/removed for security/ProperMotionFastRotators.txt'
+ifile4 = '/removed for security/ProperMotionSlowRotators.txt'
 
-ifile5 = '/Users/dicy/Drive/GSUResearchandClasses/Research/KeplerWork/OutputFiles/DeclinationFastRotators.txt'
-ifile6 = '/Users/dicy/Drive/GSUResearchandClasses/Research/KeplerWork/OutputFiles/DeclinationSlowRotators.txt'
+ifile5 = '/removed for security/DeclinationFastRotators.txt'
+ifile6 = '/removed for security/DeclinationSlowRotators.txt'
 
-ifile7 = '/Users/dicy/Drive/GSUResearchandClasses/Research/KeplerWork/OutputFiles/SDSSColorsSlowRotators.txt'
-ifile8 = '/Users/dicy/Drive/GSUResearchandClasses/Research/KeplerWork/OutputFiles/SDSSColorsFastRotators.txt'
+ifile7 = '/removed for security/SDSSColorsSlowRotators.txt'
+ifile8 = '/removed for security/SDSSColorsFastRotators.txt'
 
-ifile9 = '/Users/dicy/Drive/GSUResearchandClasses/Research/KeplerWork/OutputFiles/mdwarfstandards.txt'
+ifile9 = '/removed for security/mdwarfstandards.txt'
 
 dslow = np.loadtxt(ifile1,delimiter=',')
 dfast = np.loadtxt(ifile2,delimiter=',')
