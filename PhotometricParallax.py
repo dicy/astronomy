@@ -2,31 +2,34 @@
 """
 Created on Wed May 21 11:40:20 2014
 
+Edited on Fri June 6 13:45 2014 - updated the steps in the proceedure, as I was calculating the magnitudes incorrectly 
+in the earlier version
+
 @author: dicy
 
-Compute the photometric parallax when colors and proper motions are known using a fit to standard stars. The code is
-fairly simple, but I think it looks a little cluttered. The first portion opens the files, then a series of functions 
-are defined, then the values from all the input files are passed thru the functions. Finally I make a plot. I'd like 
-to move the plot to another script then call the script at the end, but I'm not completely sure how I want to do that, 
-so I'm open to suggestions.
+Compute the photometric parallax when colors and proper motions are known. The code is fairly simple, but I think it 
+looks a little cluttered. The first portion opens the files, then a series of functions that are needed are defined, 
+then the values from all the input files are passed thru the functions. Finally I make a plot. I'd like to move the plot
+to another script then call the script at the end, but I'm not completely sure how I want to do that, so I'm open to
+suggestions.
 
 """
 import numpy as np
 from pylab import figure, show
 
-ifile1 = '/removed for security/2MASSSColorsSlowRotators.txt'
-ifile2 = '/removed for security/2MASSSColorsFastRotators.txt'
+ifile1 = '/Users/dicy/Drive/GSUResearchandClasses/Research/KeplerWork/OutputFiles/2MASSSColorsSlowRotators.txt'
+ifile2 = '/Users/dicy/Drive/GSUResearchandClasses/Research/KeplerWork/OutputFiles/2MASSSColorsFastRotators.txt'
 
-ifile3 = '/removed for security/ProperMotionFastRotators.txt'
-ifile4 = '/removed for security/ProperMotionSlowRotators.txt'
+ifile3 = '/Users/dicy/Drive/GSUResearchandClasses/Research/KeplerWork/OutputFiles/ProperMotionFastRotators.txt'
+ifile4 = '/Users/dicy/Drive/GSUResearchandClasses/Research/KeplerWork/OutputFiles/ProperMotionSlowRotators.txt'
 
-ifile5 = '/removed for security/DeclinationFastRotators.txt'
-ifile6 = '/removed for security/DeclinationSlowRotators.txt'
+ifile5 = '/Users/dicy/Drive/GSUResearchandClasses/Research/KeplerWork/OutputFiles/DeclinationFastRotators.txt'
+ifile6 = '/Users/dicy/Drive/GSUResearchandClasses/Research/KeplerWork/OutputFiles/DeclinationSlowRotators.txt'
 
-ifile7 = '/removed for security/SDSSColorsSlowRotators.txt'
-ifile8 = '/removed for security/SDSSColorsFastRotators.txt'
+ifile7 = '/Users/dicy/Drive/GSUResearchandClasses/Research/KeplerWork/OutputFiles/SDSSColorsSlowRotators.txt'
+ifile8 = '/Users/dicy/Drive/GSUResearchandClasses/Research/KeplerWork/OutputFiles/SDSSColorsFastRotators.txt'
 
-ifile9 = '/removed for security/mdwarfstandards.txt'
+ifile9 = '/Users/dicy/Drive/GSUResearchandClasses/Research/KeplerWork/OutputFiles/mdwarfstandards.txt'
 
 dslow = np.loadtxt(ifile1,delimiter=',')
 dfast = np.loadtxt(ifile2,delimiter=',')
@@ -76,6 +79,14 @@ def cleanup(limit,inList,searchList):
             inList.pop(idx)
             searchList.pop(idx)
     return inList, searchList 
+    
+def cleanup2(limit,inList,searchList):
+    for item in inList[:]:
+        if item >= limit:
+            idx = inList.index(item)
+            inList.pop(idx)
+            searchList.pop(idx)
+    return inList, searchList     
 
 #j,h,k are 2MASS magnitudes
 #V is app mag
@@ -92,13 +103,9 @@ def transform(g,r):
    
 limit2 = 2
 colStand,vStand = cleanup(limit2,colStand,vStand)  
-
-coeff = np.polyfit(colStand,vStand,4)
-
-def transform2(color):
-    M = np.polyval(coeff,color)
-    return M
-    #look in henry et al 2004    
+limit = 20
+vStand,colStand = cleanup2(limit,vStand,colStand)
+print(max(vStand))  
     
 def photometricparallax(M,V):
     piPhot = 10**((M-V-5)/5)
@@ -140,13 +147,18 @@ Vfast = [transform(d,e) for d,e in zip(gfast,rfast)]
 colSlow = [color(aa,bb) for aa,bb in zip(Vslow,jslow)]
 colFast = [color(aa,bb) for aa,bb in zip(Vfast,jfast)]
 
+distStand = [dist(ddd) for ddd in plxStand]
+Mstand = [absmag(eee,fff) for eee,fff in zip(vStand,distStand)]
+
+coeff = np.polyfit(colStand,Mstand,1)
+
+def transform2(color):
+    M = np.polyval(coeff,color)
+    return M
+    #look in henry et al 2004  
+
 Mslow = [transform2(m) for m in colSlow]
 Mfast = [transform2(p) for p in colFast]
-
-test = transform2(4)
-print(test)
-test2 = np.polyval(coeff,4)
-print(test2)
 
 colSlow, Mslow = cleanup(limit2,colSlow,Mslow)
 colFast, Msfast = cleanup(limit2,colFast,Mfast)
@@ -162,13 +174,11 @@ muFast = [mu(aaa,bbb,ccc) for aaa,bbb,ccc in zip(pmraFast,pmdecFast,decFast)]
 
 distSlow = [dist(ss) for ss in piSlow]
 distFast = [dist(tt) for tt in piFast]
-distStand = [dist(ddd) for ddd in plxStand]
 
 vraSlow = [component(iii,jjj) for iii,jjj in zip(pmraSlow,distSlow)]
 vraFast = [component(kkk,mmmm) for kkk,mmmm in zip(pmraFast,distFast)]
 vdecSlow = [component(nnn,ppp) for nnn,ppp in zip(pmdecSlow,distSlow)]
 vdecFast = [component(ggg,hhh) for ggg,hhh in zip(pmdecFast,distFast)]
-Mstand = [absmag(eee,fff) for eee,fff in zip(vStand,distStand)]
 
 vtransSlow = [transverse(cc,dd) for cc,dd in zip(muSlow,distSlow)]
 vtransFast = [transverse(ee,ff) for ee,ff in zip(muFast,distFast)]
@@ -184,6 +194,7 @@ ax1.plot(sortedColor,np.polyval(coeff,sortedColor),'r-')
 ax1.plot(colSlow,Mslow,'b.')
 ax1.plot(colFast,Mfast,'m.')
 ax1.set_ylim(0,20)
+#ax1.set_xlim(-150,150)
 ax1.set_ylim(ax1.get_ylim()[::-1])
 ax1.set_xlabel(r'V-J')
 ax1.set_ylabel(r'$M_V$')
